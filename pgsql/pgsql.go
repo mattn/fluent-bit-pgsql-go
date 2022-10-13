@@ -89,8 +89,8 @@ func (output *OutputPlugin) Flush() error {
 	}
 	defer tx.Rollback()
 
-	query := fmt.Sprintf(`with json_pack as (select json_array_elements('%s') as json_pack )INSERT INTO %s select * from json_pack;`, buf.String(), output.table)
-	_, err = tx.Exec(query)
+	query := fmt.Sprintf(`with json_pack as (select json_array_elements(?) as json_pack )INSERT INTO %s select * from json_pack;`, output.table)
+	_, err = tx.Exec(query, buf.String())
 	if err != nil {
 		log.Println(err)
 	} else {
